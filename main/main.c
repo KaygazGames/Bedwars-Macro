@@ -10,16 +10,10 @@ void app_main(void)
 {
     ESP_LOGI(TAG, "Başlatılıyor...");
 
-    // USB Host başlat
-    ESP_LOGI(TAG, "USB Host başlatılıyor...");
     usb_host_init();
-
-    // BLE Mouse başlat
-    ESP_LOGI(TAG, "BLE Mouse başlatılıyor...");
     ble_mouse_init();
 
-    while(1) {
-        // USB fareyi oku ve BLE üzerinden gönder
+    while(1){
         usb_mouse_poll();
         vTaskDelay(pdMS_TO_TICKS(10));
     }
