@@ -1,7 +1,9 @@
-name: Docker ESP32 Build
+name: ESP32 Docker Build
 
 on:
   push:
+    branches: [main]
+  pull_request:
     branches: [main]
 
 jobs:
@@ -9,12 +11,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Build with Docker
         run: |
+          # Dockerfile ile build imajı oluştur
           docker build -t esp32s3-build .
-          docker run --rm -v ${{ github.workspace }}:/project esp32s3-build
+
+          # Proje dizinini mount ederek build et
+          docker run --rm -v ${{ github.workspace }}:/project esp32s3-build \
+            /bin/bash -c "idf.py set-target esp32s3 && idf.py fullclean && idf.py build -v"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
